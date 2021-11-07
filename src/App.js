@@ -1,8 +1,8 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-//import S3Viewer from "./components/S3Viewer";
 
 import axios from "axios";
+import { S3Viewer } from "./components/S3Viewer";
 
 const baseURL = 'https://seven-s3-bucket.s3.ap-southeast-2.amazonaws.com/'
 
@@ -18,13 +18,15 @@ function xmlParse(data) {
     })
   }
   return []
-  
-  
 }
+
+
+
 
 function App() {
   const [s3List, sets3List] = useState();
   const [loading, setLoading] = useState(null);
+  const [jsonFile, setjsonFile] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -32,7 +34,7 @@ function App() {
       .then((response) => {
         const list = xmlParse(response.data)
         sets3List(list.map(element=>{
-          return <a href={baseURL+element}>{element}</a>;
+          return <p key={element} onClick={e=>setjsonFile(String(baseURL+element))}>{element}</p>;
         }));
       })
       .catch((err) => {
@@ -47,8 +49,14 @@ function App() {
   return (
     <div className="App">
       <h2 align="center">Event Viewer</h2>
+      <div>
       {loading === true ? 'Loading...': ''}            
       {s3List}
+      </div>
+      <div>
+        <S3Viewer json={jsonFile}/>
+      </div>
+
     </div>
   );
 }

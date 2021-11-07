@@ -4,9 +4,21 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 
+const baseURL = 'https://seven-s3-bucket.s3.ap-southeast-2.amazonaws.com/'
+
 /**Return array based on xml content */
 function xmlParse(data) {
-  console.log(data)
+  console.log(data);
+  if (data) { 
+  const parser = new DOMParser()
+  const xml = parser.parseFromString(data, 'text/xml');
+    const contents = xml.getElementsByTagName('Contents')[0];
+    return Array(contents.getElementsByTagName('Key')).map(element=>{
+      return element[0].textContent
+    })
+  }
+  return []
+  
   
 }
 
@@ -16,9 +28,12 @@ function App() {
 
   useEffect(() => {
     setLoading(true);
-    axios("https://seven-s3-bucket.s3.ap-southeast-2.amazonaws.com/")
+    axios(baseURL)
       .then((response) => {
-        sets3List(xmlParse(response.data));
+        const list = xmlParse(response.data)
+        sets3List(list.map(element=>{
+          return <a href={baseURL+element}>{element}</a>;
+        }));
       })
       .catch((err) => {
         console.log(err);
@@ -27,9 +42,13 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
+  
+
   return (
     <div className="App">
       <h2 align="center">Event Viewer</h2>
+      {loading === true ? 'Loading...': ''}            
+      {s3List}
     </div>
   );
 }

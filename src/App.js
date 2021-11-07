@@ -12,10 +12,15 @@ function xmlParse(data) {
   if (data) {
     const parser = new DOMParser();
     const xml = parser.parseFromString(data, "text/xml");
-    const contents = xml.getElementsByTagName("Contents")[0];
-    return Array(contents.getElementsByTagName("Key")).map((element) => {
-      return element[0].textContent;
-    });
+    const contents = xml.getElementsByTagName("Key");
+    console.log(contents);
+    const result = [];
+    for (let i in contents) {
+      if (contents[i]?.textContent) {
+        result.push(contents[i].textContent);
+      }
+    }
+    return result;
   }
   return [];
 }
@@ -38,7 +43,9 @@ function App() {
                   key={element}
                   onClick={(e) => setjsonFile(String(baseURL + element))}
                 >
-                  <a href="" onClick={e=>e.preventDefault()}>{element}</a>
+                  <a href="" onClick={(e) => e.preventDefault()}>
+                    {element}
+                  </a>
                 </li>
               );
             })}

@@ -27,6 +27,6 @@ export function S3Viewer(props) {
 
   
   return <div>
-    {json ? <JSONViewer json={json}/> : <p>Click an element</p>}
+    {loading ? <p>Loading...</p> : json ? <JSONViewer json={json}/> : <p>Click an element</p>}
   </div>
 }

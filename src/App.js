@@ -4,24 +4,21 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { S3Viewer } from "./components/S3Viewer";
 
-const baseURL = 'https://seven-s3-bucket.s3.ap-southeast-2.amazonaws.com/'
+const baseURL = "https://seven-s3-bucket.s3.ap-southeast-2.amazonaws.com/";
 
 /**Return array based on xml content */
 function xmlParse(data) {
   console.log(data);
-  if (data) { 
-  const parser = new DOMParser()
-  const xml = parser.parseFromString(data, 'text/xml');
-    const contents = xml.getElementsByTagName('Contents')[0];
-    return Array(contents.getElementsByTagName('Key')).map(element=>{
-      return element[0].textContent
-    })
+  if (data) {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(data, "text/xml");
+    const contents = xml.getElementsByTagName("Contents")[0];
+    return Array(contents.getElementsByTagName("Key")).map((element) => {
+      return element[0].textContent;
+    });
   }
-  return []
+  return [];
 }
-
-
-
 
 function App() {
   const [s3List, sets3List] = useState();
@@ -32,10 +29,21 @@ function App() {
     setLoading(true);
     axios(baseURL)
       .then((response) => {
-        const list = xmlParse(response.data)
-        sets3List(list.map(element=>{
-          return <p key={element} onClick={e=>setjsonFile(String(baseURL+element))}>{element}</p>;
-        }));
+        const list = xmlParse(response.data);
+        sets3List(
+          <ul>
+            {list.map((element) => {
+              return (
+                <li
+                  key={element}
+                  onClick={(e) => setjsonFile(String(baseURL + element))}
+                >
+                  <a href="" onClick={e=>e.preventDefault()}>{element}</a>
+                </li>
+              );
+            })}
+          </ul>
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -44,19 +52,18 @@ function App() {
       .finally(() => setLoading(false));
   }, []);
 
-  
-
   return (
     <div className="App">
-      <h2 align="center">Event Viewer</h2>
-      <div>
-      {loading === true ? 'Loading...': ''}            
-      {s3List}
+      <h2 className="title">Event Viewer</h2>
+      <div className="container">
+        <div className="s3List">
+          {loading === true ? "Loading..." : ""}
+          {s3List}
+        </div>
+        <div className="viewer">
+          <S3Viewer json={jsonFile} />
+        </div>
       </div>
-      <div>
-        <S3Viewer json={jsonFile}/>
-      </div>
-
     </div>
   );
 }

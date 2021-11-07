@@ -1,1 +1,19 @@
-button.link { background:none; border:none; }
+.container {
+  display: flex;
+  gap: 100px;
+  justify-content: center;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.title {
+  text-align: center;
+}
+
+.s3List {
+  flex: 1
+}
+
+.viewer {
+  flex: 4
+}

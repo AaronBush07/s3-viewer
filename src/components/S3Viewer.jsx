@@ -23,7 +23,7 @@ export function S3Viewer(props) {
         setLoading(false);
       }).finally(()=>setLoading(false))
     }
-  }, [props.json])
+  }, [props])
 
   
   return <div>

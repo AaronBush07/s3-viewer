@@ -39,13 +39,13 @@ function App() {
           <ul>
             {list.map((element) => {
               return (
-                <li
-                  key={element}
-                  onClick={(e) => setjsonFile(String(baseURL + element))}
-                >
-                  <a href="" onClick={(e) => e.preventDefault()}>
-                    {element}
-                  </a>
+                <li key={element}>
+                  <input
+                  className="link"
+                    type="button"
+                    onClick={(e) => setjsonFile(String(baseURL + element))}
+                    value={element}
+                  />
                 </li>
               );
             })}
